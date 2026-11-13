@@ -3,7 +3,7 @@
 // Es la clase base abstracta de la jerarquia de envios
 // Guarda atributos y comportamientos comunes a todos los tipos de envios
 
-import { IRastreable } from "./interfaces.js";
+import { IRastreable } from "./Interfaces.js";
 
 export abstract class ServicioEnvio implements IRastreable {
     // Encapsulamiento estricto en runtime (inaccesible desde el exterior)

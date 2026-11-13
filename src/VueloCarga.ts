@@ -1,5 +1,5 @@
 import { Mutex } from "./Mutex.js";
-import { esperar } from "./utilidades.js";
+import { esperar } from "./Utilidades.js";
 
 export class VueloCarga {
     #capacidadDisponibleKg: number;

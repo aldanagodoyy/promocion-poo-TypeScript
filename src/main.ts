@@ -10,9 +10,25 @@ async function ejecutarSistema() {
     const paqueteMuestra: DimensionesPaquete = { altoCm: 30, anchoCm: 40, largoCm: 50, pesoKg: 12 };
     const distancia = 850;
 
-    // uso de factory method y strategy
+    // Uso de Factory Method y estrategia inicial
     const envioTerrestre = FabricaEnvios.crearEnvio("terrestre", "Comodoro Rivadavia");
     const centro = new CentroLogistico(envioTerrestre);
+    centro.presupuestarYDespachar(paqueteMuestra, distancia);
+
+    // --- Demostración del Patrón Strategy ---
+    console.log("\n--- Cambio de estrategia en tiempo de ejecución (Strategy) ---");
+    const envioAereo = FabricaEnvios.crearEnvio("aereo", "Ushuaia");
+    centro.setEstrategia(envioAereo);
+    centro.presupuestarYDespachar(paqueteMuestra, distancia);
+
+    // --- Demostración de Tipado Estructural (Objeto plano como estrategia) ---
+    console.log("\n--- Tipado estructural: objeto plano como estrategia ---");
+    const servicioFleteExterno = {
+        calcularCosto: (d: DimensionesPaquete, km: number): number =>
+            (d.pesoKg * 200) + (km * 40) + 1200,
+        obtenerTipoTransporte: (): string => "Flete Subcontratado Externo (API Terceros)"
+    };
+    centro.setEstrategia(servicioFleteExterno);
     centro.presupuestarYDespachar(paqueteMuestra, distancia);
 
     // CONCURRENCIA
@@ -23,12 +39,30 @@ async function ejecutarSistema() {
         FabricaEnvios.crearEnvio("terrestre", "Río Gallegos")
     ];
 
+    // Comparación Secuencial vs Concurrente
+    console.time("Tiempo Secuencial");
+    for (const envio of lote) {
+        await envio.procesarDespachoAsync();
+    }
+    console.timeEnd("Tiempo Secuencial");
+
     console.time("Tiempo Concurrente");
     await centro.despacharLote(lote);
     console.timeEnd("Tiempo Concurrente");
 
     // PARALELISMO
     console.log("\n--- 2) PARALELISMO: Cálculo masivo con Worker Threads ---");
+    
+    console.time("Tiempo un solo hilo");
+    const t = FabricaEnvios.crearEnvio("terrestre", "Destino Masivo");
+    const a = FabricaEnvios.crearEnvio("aereo", "Destino Masivo");
+    let acumulado = 0;
+    for (let i = 0; i < 5_000_000; i++) {
+        acumulado += t.calcularCosto(paqueteMuestra, distancia);
+        acumulado += a.calcularCosto(paqueteMuestra, distancia);
+    }
+    console.timeEnd("Tiempo un solo hilo");
+
     const buffer = new SharedArrayBuffer(4);
     const presupuestador = new PresupuestadorParalelo();
 
@@ -54,3 +88,4 @@ async function ejecutarSistema() {
 }
 
 ejecutarSistema().catch(console.error);
+

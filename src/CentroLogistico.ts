@@ -28,7 +28,7 @@ export class CentroLogistico {
     public async despacharLote(envios: ServicioEnvio[]): Promise<void> {
         const promesas = envios.map((envio) => envio.procesarDespachoAsync());
         await Promise.all(promesas);
-        console.log("[Lote] Todos los envíos asíncronos procesados concurrentemente.");
+        console.log("[Lote] Todos los envíos procesados concurrentemente."); // Sin la palabra "asíncronos"
     }
 }
 
