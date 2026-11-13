@@ -1,0 +1,78 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam monochrome true
+skinparam shadowing false
+
+interface IRastreable {
+    + obtenerUbicacionActual(): string
+}
+
+interface ICalculadorTarifa {
+    + calcularCosto(dimensiones: DimensionesPaquete, distanciaKm: number): number
+    + obtenerTipoTransporte(): string
+}
+
+abstract class ServicioEnvio {
+    - #codigoRastreo: string
+    # destino: string
+    # costoBase: number
+    + getCodigoRastreo(): string
+    {abstract} + procesarDespacho(): boolean
+    {abstract} + procesarDespachoAsync(): Promise<boolean>
+    + obtenerUbicacionActual(): string
+}
+
+class EnvioTerrestre {
+    + patenteCamion: string
+    + calcularCosto(...): number
+    + procesarDespacho(): boolean
+    + procesarDespachoAsync(): Promise<boolean>
+    + obtenerTipoTransporte(): string
+}
+
+class EnvioAereo {
+    - matriculaVuelo: string
+    + calcularCosto(...): number
+    + procesarDespacho(): boolean
+    + procesarDespachoAsync(): Promise<boolean>
+    + obtenerTipoTransporte(): string
+}
+
+class CentroLogistico {
+    - calculador: ICalculadorTarifa
+    + setEstrategia(nuevoCalculador: ICalculadorTarifa): void
+    + presupuestarYDespachar(...): number
+    + despacharLote(envios: ServicioEnvio[]): Promise<void>
+}
+
+class FabricaEnvios {
+    {static} + crearEnvio(tipo: string, destino: string): ServicioEnvio & ICalculadorTarifa
+}
+
+class VueloCarga {
+    - #capacidadDisponibleKg: number
+    - mutex: Mutex
+    + reservar(pesoKg: number): Promise<boolean>
+    + obtenerCapacidadDisponible(): number
+}
+
+class Mutex {
+    - ocupado: boolean
+    - cola: Array
+    + ejecutarExclusivo(fn): Promise<T>
+}
+
+' Relaciones
+IRastreable <|.. ServicioEnvio
+ServicioEnvio <|-- EnvioTerrestre
+ServicioEnvio <|-- EnvioAereo
+ICalculadorTarifa <|.. EnvioTerrestre
+ICalculadorTarifa <|.. EnvioAereo
+
+CentroLogistico --> ICalculadorTarifa : usa (Strategy)
+FabricaEnvios ..> EnvioTerrestre : crea
+FabricaEnvios ..> EnvioAereo : crea
+VueloCarga *-- Mutex : encapsula
+
+@enduml
+
