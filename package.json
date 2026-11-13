@@ -1,7 +1,7 @@
 {
   "name": "promocion-poo-typescript",
   "version": "1.0.0",
-  "description": "",
+  "description": "Este repositorio contiene la implementación práctica y ejecutable de los ejemplos desarrollados en el artículo técnico para la promoción de la asignatura Programación Orientada a Objetos.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,5 +9,18 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs"
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aldanagodoyy/promocion-poo-typescript.git"
+  },
+  "bugs": {
+    "url": "https://github.com/aldanagodoyy/promocion-poo-typescript/issues"
+  },
+  "homepage": "https://github.com/aldanagodoyy/promocion-poo-typescript#readme",
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^7.0.2"
+  }
 }
