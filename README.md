@@ -27,7 +27,8 @@ Asegurarse de tener instalado en el sistema:
 
 ### 1. Clonar el repositorio
 
-git clone <https://github.com/aldanagodoyy/promocion-poo-TypeScript>
+git clone https://github.com/aldanagodoyy/promocion-poo-TypeScript
+
 cd promocion-poo-typescript
 
 ### 2. Instalar dependencias
